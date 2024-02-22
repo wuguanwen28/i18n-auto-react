@@ -1,0 +1,22 @@
+{
+  "name": "i18n-auto-translate-react",
+  "version": "0.0.1",
+  "description": "基于i18next并结合百度翻译API服务的自动翻译插件",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rollup -c rollup.config.ts --configPlugin typescript -w",
+    "build": "rollup -c rollup.config.ts --configPlugin typescript"
+  },
+  "keywords": [],
+  "author": "wuguanwen",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^4.12.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "prettier": "^3.2.5"
+  }
+}

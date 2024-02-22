@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "sourceMap": false
+  },
+  "include": [
+    "src/**/*",
+    "rollup.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
