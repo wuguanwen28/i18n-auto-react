@@ -1,12 +1,5 @@
-import {
-  existsSync,
-  lstatSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  writeFileSync
-} from 'fs'
-import { basename, dirname, extname, relative, resolve } from 'path'
+import fs from 'fs'
+import path from 'path'
 import { logger } from './log'
 import ignore from 'ignore'
 import prettier from 'prettier'
@@ -21,8 +14,8 @@ let traverse = require('@babel/traverse').default
 
 // 获取配置文件
 export const getConfiguration = () => {
-  let filePath = resolve(process.cwd(), 'i18n.config.js')
-  if (!existsSync(filePath)) {
+  let filePath = path.resolve(process.cwd(), 'i18n.config.js')
+  if (!fs.existsSync(filePath)) {
     logger.error(`配置文件不存在，请执行 npx i18n init`)
     process.exit(0)
   }
@@ -39,9 +32,9 @@ export const getConfiguration = () => {
 
 // 创建文件夹
 export const mkdir = (dir: string) => {
-  if (!existsSync(dir)) {
-    mkdir(dirname(dir))
-    mkdirSync(dir)
+  if (!fs.existsSync(dir)) {
+    mkdir(path.dirname(dir))
+    fs.mkdirSync(dir)
   }
 }
 
@@ -51,15 +44,15 @@ export const createLanguageFile = async (
   template: string,
   data: Record<string, string> = {}
 ) => {
-  mkdir(dirname(filePath))
-  const fileName = basename(filePath, extname(filePath))
+  mkdir(path.dirname(filePath))
+  const fileName = path.basename(filePath, path.extname(filePath))
 
   const file = template
     .replace('$name', `'${fileName}'`)
     .replace('$data', () => JSON.stringify(data))
 
   let code = await prettierJs(file)
-  writeFileSync(filePath, code, { encoding: 'utf-8' })
+  fs.writeFileSync(filePath, code, { encoding: 'utf-8' })
 }
 
 export function prettierJs(code: string, config = {}) {
@@ -93,16 +86,16 @@ export function scanFile(
   config: _I18nConfigs,
   fn: (path: string) => void
 ) {
-  const dirOrFiles = readdirSync(dirPath, { encoding: 'utf8' })
+  const dirOrFiles = fs.readdirSync(dirPath, { encoding: 'utf8' })
   let fileRegex = config.test
   if (typeof fileRegex === 'string') fileRegex = new RegExp(fileRegex)
   const ig = ignore().add(config.exclude)
   const includes = ignore().add(config.include)
   for (let item of dirOrFiles) {
-    const relativePath = relative(config.__rootPath, resolve(dirPath, item))
+    const relativePath = path.relative(config.__rootPath, path.resolve(dirPath, item))
     if (!ig.ignores(relativePath) || includes.ignores(relativePath)) {
-      const filePath = resolve(dirPath, item)
-      if (lstatSync(filePath).isFile()) {
+      const filePath = path.resolve(dirPath, item)
+      if (fs.lstatSync(filePath).isFile()) {
         if (fileRegex.test(item)) fn(filePath)
       } else {
         scanFile(filePath, config, fn)
@@ -158,14 +151,14 @@ export function readLanguages(
   config: _I18nConfigs,
   isExit = false
 ) {
-  const { __rootPath, output } = config
+  const { output } = config
   const { dir: outputPath, ext = 'js' } = output
-  let curFilePath = resolve(__rootPath, outputPath, `${name}.${ext}`)
-  if (!existsSync(curFilePath) && isExit) {
+  let curFilePath = path.resolve(process.cwd(), outputPath, `${name}.${ext}`)
+  if (!fs.existsSync(curFilePath) && isExit) {
     logger.error(`${curFilePath} 文件不存在!`)
     process.exit(0)
   }
-  const file = readFileSync(curFilePath, { encoding: 'utf-8' })
+  const file = fs.readFileSync(curFilePath, { encoding: 'utf-8' })
   const ast = parse(file, {
     sourceType: 'module',
     plugins: ['typescript']
