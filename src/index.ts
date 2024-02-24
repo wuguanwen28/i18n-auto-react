@@ -1,2 +1,2 @@
-let str: string = '花飘万家雪'
-console.log('str ==> ', str)
+export { I18nCommand } from './commands'
+export type { I18nConfigs } from './type'
