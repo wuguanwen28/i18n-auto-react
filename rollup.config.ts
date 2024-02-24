@@ -5,7 +5,8 @@ import dts from 'rollup-plugin-dts'
 const config: RollupOptions[] = [
   {
     input: {
-      index: './src/index.ts'
+      index: './src/index.ts',
+      'webpack-loader': './src/parser/webpack-loader.ts'
     },
     output: {
       dir: 'dist',
@@ -14,6 +15,7 @@ const config: RollupOptions[] = [
       manualChunks: (id) => {
         if (id.includes('utils')) return 'utils'
         if (id.includes('commands')) return 'commands'
+        if (id.includes('vite-plugin')) return 'vite-plugin'
       },
       hoistTransitiveImports: false
     },

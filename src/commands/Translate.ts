@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { I18nConfigs } from '../type'
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import {
   DisableRule,
   ERROE_CODE_MAP,
@@ -10,13 +10,11 @@ import {
   isCallExpression,
   logger,
   md5Hash,
-  prettierJs,
+  readLanguages,
   scanFile,
   sleep,
   zhExt
 } from '../utils'
-import { parse } from '@babel/parser'
-import type { TraverseOptions } from '@babel/traverse'
 import axios from 'axios'
 import crypto from 'crypto'
 import { isTSLiteralType } from '@babel/types'
@@ -50,23 +48,7 @@ export class Translate {
         createLanguageFile(dirPath, template)
         this.languages[name] = {}
       } else {
-        const code = readFileSync(dirPath, { encoding: 'utf8' })
-        const ast = parse(code, {
-          sourceType: 'module',
-          plugins: ['typescript']
-        })
-        const obj: Record<string, any> = {}
-        traverse(ast, {
-          ObjectProperty(path: any) {
-            const key = path.node.key.value || path.node.key.name
-            const value =
-              path.node.value.value ??
-              path.node.value.name ??
-              path.node.value.quasis[0].value.raw
-            if (key != undefined && value != undefined) obj[key] = value
-          }
-        } as TraverseOptions)
-        this.languages[name] = obj
+        this.languages[name] = readLanguages(name, this.config)
       }
       this.newLanguages[name] = []
     })
@@ -93,7 +75,7 @@ export class Translate {
 
   babelOpt(code: string, file: string) {
     const importInfo = this.config.importInfo
-    const ast = babelParse(code, file)
+    const ast = babelParse(code)
     if (!ast) return
     const _this = this
 
@@ -146,7 +128,7 @@ export class Translate {
           _this.validateKey(value, id, file)
         }
       }
-    } as TraverseOptions)
+    })
   }
 
   validateKey(zh: string, key: string, file: string) {

@@ -1,4 +1,4 @@
-export const configCode = `/** * @type {import('i18n-auto-react').I18nOptions} */
+export const configCode = `/** * @type {import('i18n-auto-react').I18nConfigs} */
 const config = {
   entry: './src',
   output: {
@@ -19,6 +19,8 @@ const config = {
   },
 
   template: 'export default $data',
+
+  warning: true,
 
   // 私人测试翻译账户，请申请自己的百度翻译服务
   server: {

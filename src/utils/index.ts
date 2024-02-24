@@ -2,6 +2,7 @@ import {
   existsSync,
   lstatSync,
   mkdirSync,
+  readFileSync,
   readdirSync,
   writeFileSync
 } from 'fs'
@@ -16,6 +17,7 @@ import t from '@babel/types'
 import crypto from 'crypto'
 import { DisableRule } from './disableRule'
 export * from './tpl'
+let traverse = require('@babel/traverse').default
 
 // 获取配置文件
 export const getConfiguration = () => {
@@ -109,7 +111,7 @@ export function scanFile(
   }
 }
 
-export function babelParse(code: string, file: string) {
+export function babelParse(code: string) {
   try {
     const ast = parse(code, {
       sourceType: 'module',
@@ -149,6 +151,34 @@ export function md5Hash(str: string, secretKey?: string): string {
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export function readLanguages(
+  name: string,
+  config: _I18nConfigs,
+  isExit = false
+) {
+  const { __rootPath, output } = config
+  const { dir: outputPath, ext = 'js' } = output
+  let curFilePath = resolve(__rootPath, outputPath, `${name}.${ext}`)
+  if (!existsSync(curFilePath) && isExit) {
+    logger.error(`${curFilePath} 文件不存在!`)
+    process.exit(0)
+  }
+  const file = readFileSync(curFilePath, { encoding: 'utf-8' })
+  const ast = parse(file, {
+    sourceType: 'module',
+    plugins: ['typescript']
+  })
+  const res = {}
+  traverse(ast, {
+    ObjectProperty(path) {
+      const key = path.node.key.value || path.node.key.name
+      const value = path.node.value.value || path.node.value.name
+      res[key] = value || ''
+    }
+  })
+  return res
 }
 
 export { logger, DisableRule }

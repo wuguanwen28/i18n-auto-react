@@ -59,6 +59,10 @@ export interface I18nConfigs {
    */
   template: string
   /**
+   * 是否显示警告，打包时检查中文是否存在语言包中
+   */
+  warning: boolean
+  /**
    * 百度翻译开放平台服务
    */
   server: {
