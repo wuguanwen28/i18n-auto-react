@@ -10,10 +10,23 @@
   "scripts": {
     "dev": "rollup -c rollup.config.ts --configPlugin typescript -w",
     "build": "rollup -c rollup.config.ts --configPlugin typescript",
-    "npm:publish": "npm version patch && npm publish"
+    "npm:publish": "npm version patch && npm publish --registry https://registry.npmjs.org/"
   },
-  "keywords": [],
+  "keywords": [
+    "i18n",
+    "i18next",
+    "translate",
+    "auto-translate",
+    "react",
+    "翻译",
+    "国际化",
+    "自动翻译"
+  ],
   "author": "wuguanwen",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wuguanwen28/i18n-auto-react.git"
+  },
   "license": "ISC",
   "dependencies": {
     "@babel/generator": "^7.23.6",

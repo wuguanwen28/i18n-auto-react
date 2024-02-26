@@ -1,7 +1,7 @@
 /src
 /node_modules
 pnpm-lock.yaml
-rollup-config.ts
+rollup.config.ts
 tsconfig.json
 .prettierrc.cjs
 .gitignore
