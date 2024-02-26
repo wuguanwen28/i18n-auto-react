@@ -189,7 +189,7 @@ function noLocale(value: string, id: string, relativePath: string, loc: any) {
   if (!baseLocale[id]) {
     let line = chalk.bold(`Line ${loc.start.line}:${loc.start.column}:`)
     let content = `${line}  在语言包中未发现以下字段【${chalk.blue(value)}】请更新语言包`
-    let res = new Error(`[i18n-auto-translate]\n${relativePath}\n  ${content}`)
+    let res = new Error(`[i18n-auto-react]\n${relativePath}\n  ${content}`)
     // @ts-ignore
     _options.warning && _options.emitWarning(_options.isVite ? content : res)
     return true
