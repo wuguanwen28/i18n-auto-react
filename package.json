@@ -9,7 +9,8 @@
   },
   "scripts": {
     "dev": "rollup -c rollup.config.ts --configPlugin typescript -w",
-    "build": "rollup -c rollup.config.ts --configPlugin typescript"
+    "build": "rollup -c rollup.config.ts --configPlugin typescript",
+    "npm:publish": "npm version patch && npm publish"
   },
   "keywords": [],
   "author": "wuguanwen",
@@ -33,5 +34,8 @@
     "rollup-plugin-dts": "^6.1.0",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "i18next": "*"
   }
 }
