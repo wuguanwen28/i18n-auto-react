@@ -9,7 +9,7 @@ export default class GenExport {
   constructor(private config: _I18nConfigs) {}
 
   async genExportFile() {
-    let { languages, output } = this.config
+    let { languages, output, __rootPath } = this.config
 
     let imports = languages
       .map((name) => {
@@ -21,7 +21,7 @@ export default class GenExport {
     let resources = languages
       .map((name) => {
         let _name = name.replace('-', '_')
-        return `${_name}: {translation: ${_name}},`
+        return `extendLocale('${_name}', ${_name});`
       })
       .join('\n')
 
@@ -32,7 +32,7 @@ export default class GenExport {
     let dirPath = output.dir
     let ext = output.ext || 'js'
 
-    let curFilePath = path.resolve(process.cwd(), dirPath, `index.${ext}`)
+    let curFilePath = path.resolve(__rootPath, dirPath, `index.${ext}`)
     let code = await prettierJs(file)
     fs.writeFileSync(curFilePath, code, { encoding: 'utf-8' })
   }

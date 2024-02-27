@@ -13,9 +13,9 @@ const config = {
   languages: ['zh', 'en'],
 
   importInfo: {
-    source: 'i18next',
-    imported: 't',
-    local: '_t'
+    source: 'i18n-auto-react',
+    imported: 'i18n',
+    local: '_i18n'
   },
 
   template: 'export default $data',
@@ -52,22 +52,9 @@ export const zhExt = /[\u4e00-\u9fa5]+/
 
 export const defaultTpl = 'export default $data'
 
-export const exportTpl = `import i18n from 'i18next';
+export const exportTpl = `import { extendLocale } from 'i18n-auto-react';
 $import
 
-const resources = {
-  $resources
-};
-
-let lng = localStorage.getItem('i18nextLng') || 'zh';
-
-i18n.init({
-  lng,
-  resources,
-  interpolation: { escapeValue: false }
-});
-
-i18n.on('languageChanged', (lng) => {
-  localStorage.setItem('i18nextLng', lng);
-})
+// 注册语言包数据
+$resources
 `

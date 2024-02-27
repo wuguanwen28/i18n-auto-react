@@ -1,9 +1,24 @@
 {
   "name": "i18n-auto-react",
-  "version": "0.0.3",
-  "description": "基于i18next并结合百度翻译API服务的自动翻译插件",
+  "version": "0.0.5",
+  "description": "基于百度翻译API服务的自动翻译插件",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./vite": {
+      "types": "./dist/vite-plugin/index.d.ts",
+      "require": "./dist/vite-plugin/index.js"
+    },
+    "./webpack": {
+      "types": "./dist/webpack-loader/index.d.ts",
+      "require": "./dist/webpack-loader/index.js"
+    }
+  },
   "bin": {
     "i18n": "./bin/index.js"
   },
@@ -47,8 +62,5 @@
     "rollup-plugin-dts": "^6.1.0",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3"
-  },
-  "peerDependencies": {
-    "i18next": "*"
   }
 }

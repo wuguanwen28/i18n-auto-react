@@ -7,6 +7,7 @@ import {
   babelParse,
   createLanguageFile,
   defaultTpl,
+  getDefault,
   isCallExpression,
   logger,
   md5Hash,
@@ -18,7 +19,8 @@ import {
 import axios from 'axios'
 import crypto from 'crypto'
 import { isTSLiteralType } from '@babel/types'
-const traverse = require('@babel/traverse').default
+import _traverse from '@babel/traverse'
+const traverse = getDefault(_traverse)
 
 type TransResult = Array<{ src: string; dst: string }>
 type LanItem = {
@@ -26,7 +28,11 @@ type LanItem = {
   id: string
   file: string
 }
-export type _I18nConfigs = I18nConfigs & { __rootPath: string }
+export type _I18nConfigs = I18nConfigs & {
+  __rootPath: string
+  filePath: string
+  warning: boolean
+}
 export class Translate {
   config: _I18nConfigs
   languages: Record<string, Record<string, string>> = {}
@@ -151,9 +157,9 @@ export class Translate {
       (p, c) => ((p[c.id] = c.chinese), p),
       {} as any
     )
-    const { output, template = defaultTpl } = this.config
+    const { output, template = defaultTpl, __rootPath } = this.config
     let curFilePath = resolve(
-      process.cwd(),
+      __rootPath,
       output.dir,
       `zh.${output.ext || 'js'}`
     )
@@ -186,7 +192,7 @@ export class Translate {
   }
 
   async translate() {
-    const { server, output, template = defaultTpl } = this.config
+    const { server, output, template = defaultTpl, __rootPath } = this.config
     const curQps = server.qps || 1 // 翻译API有QPS限制s
 
     for (let curLanguage in this.newLanguages) {
@@ -218,7 +224,7 @@ export class Translate {
       }
 
       let curFilePath = resolve(
-        process.cwd(),
+        __rootPath,
         output.dir,
         `${curLanguage}.${output.ext || 'js'}`
       )

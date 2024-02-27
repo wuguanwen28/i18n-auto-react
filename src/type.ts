@@ -13,6 +13,8 @@ export type ImportInfo = {
   local: string
 }
 
+export type LngType = 'zh' | 'en' | 'yue' | 'wyw' | 'jp' | 'kor' | 'fra' | 'spa' | 'th' | 'ara' | 'ru' | 'pt' | 'de' | 'it' | 'el' | 'nl' | 'pl' | 'bul' | 'est' | 'dan' | 'fin' | 'cs' | 'rom' | 'slo' | 'swe' | 'hu' | 'cht' | 'vie';
+
 export interface I18nConfigs {
   /**
    * 入口文件夹路径
@@ -46,7 +48,7 @@ export interface I18nConfigs {
   /**
    * 要翻译的语种, 支持语种：https://api.fanyi.baidu.com/doc/21
    */
-  languages: ['zh', 'en']
+  languages: LngType[]
   /**
    * 导入翻译工具库
    */
@@ -55,7 +57,7 @@ export interface I18nConfigs {
    * 导出语言包模板
    * $data为语言包对象
    * $name为语言名称
-   * @example 'export default $data'
+   * @default 'export default $data'
    */
   template: string
   /**

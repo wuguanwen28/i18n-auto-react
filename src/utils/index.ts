@@ -10,7 +10,12 @@ import t from '@babel/types'
 import crypto from 'crypto'
 import { DisableRule } from './disableRule'
 export * from './tpl'
-let traverse = require('@babel/traverse').default
+import _traverse from '@babel/traverse'
+const traverse = getDefault(_traverse)
+
+export function getDefault(data) {
+  return typeof data === 'function' ? data : data.default
+}
 
 // 获取配置文件
 export const getConfiguration = () => {
@@ -92,7 +97,10 @@ export function scanFile(
   const ig = ignore().add(config.exclude)
   const includes = ignore().add(config.include)
   for (let item of dirOrFiles) {
-    const relativePath = path.relative(config.__rootPath, path.resolve(dirPath, item))
+    const relativePath = path.relative(
+      config.__rootPath,
+      path.resolve(dirPath, item)
+    )
     if (!ig.ignores(relativePath) || includes.ignores(relativePath)) {
       const filePath = path.resolve(dirPath, item)
       if (fs.lstatSync(filePath).isFile()) {
@@ -153,10 +161,10 @@ export function readLanguages(
 ) {
   const { output } = config
   const { dir: outputPath, ext = 'js' } = output
-  let curFilePath = path.resolve(process.cwd(), outputPath, `${name}.${ext}`)
+  let curFilePath = path.resolve(config.__rootPath, outputPath, `${name}.${ext}`)
   if (!fs.existsSync(curFilePath) && isExit) {
     logger.error(`${curFilePath} 文件不存在!`)
-    process.exit(0)
+    // process.exit(0)
   }
   const file = fs.readFileSync(curFilePath, { encoding: 'utf-8' })
   const ast = parse(file, {
@@ -165,7 +173,7 @@ export function readLanguages(
   })
   const res = {}
   traverse(ast, {
-    ObjectProperty(path) {
+    ObjectProperty(path: any) {
       const key = path.node.key.value || path.node.key.name
       const value = path.node.value.value || path.node.value.name
       res[key] = value || ''

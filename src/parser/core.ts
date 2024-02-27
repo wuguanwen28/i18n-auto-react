@@ -1,5 +1,6 @@
 import {
   DisableRule,
+  getDefault,
   isCallExpression,
   md5Hash,
   readLanguages,
@@ -12,16 +13,18 @@ import { parse } from '@babel/parser'
 import { addNamed } from '@babel/helper-module-imports'
 import chalk from 'chalk'
 import { _I18nConfigs } from '../commands/Translate'
-let traverse = require('@babel/traverse').default
-let generator = require('@babel/generator').default
+import _traverse from '@babel/traverse'
+import _generator from '@babel/generator'
 
+let traverse = getDefault(_traverse)
+let generator = getDefault(_generator)
 let baseLocale: Record<string, string>
 let _options: _I18nConfigs
 
-export default function i18nPlugin(content, options) {
+export default function i18nPlugin(content: string, options: _I18nConfigs) {
+  options.__rootPath = options.__rootPath || process.cwd()
   if (!_options) _options = options
-  let relativePath = path.relative(process.cwd(), options.filePath)
-
+  let relativePath = path.relative(options.__rootPath, options.filePath)
   try {
     let includes = ignore().add(options.include)
     let included = includes.ignores(relativePath)
@@ -55,7 +58,7 @@ export default function i18nPlugin(content, options) {
   if (!baseLocale) baseLocale = readLanguages('zh', options, true)
   let needI18n = false
   traverse(ast, {
-    // 增加导入 i18next
+    // 增加导入翻译函数
     Program: {
       exit(path) {
         // 如果需要国际化
@@ -132,7 +135,10 @@ export default function i18nPlugin(content, options) {
               t.stringLiteral(id),
               t.objectExpression(
                 node.expressions.map((item, index) =>
-                  t.objectProperty(t.stringLiteral(`@${index + 1}`), item)
+                  t.objectProperty(
+                    t.stringLiteral(`@${index + 1}`),
+                    item as any
+                  )
                 )
               )
             ])

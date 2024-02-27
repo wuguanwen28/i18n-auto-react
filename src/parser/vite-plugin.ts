@@ -1,7 +1,8 @@
 import { getConfiguration } from '../utils'
 import i18n from './core'
-
-export default function (): any {
+// @ts-ignore
+import { PluginOptions } from 'vite'
+export function i18nAutoPlugin(): PluginOptions {
   let config = getConfiguration()
   return {
     name: 'vite-plugin-i18n-parser',
