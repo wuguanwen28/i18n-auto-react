@@ -7,11 +7,11 @@
 
 ## 安装
  ```sh
-npm install i18n-auto-react -D
+npm install i18n-auto-react
 # or
-yarn add i18n-auto-react -D
+yarn add i18n-auto-react
 # or
-pnpm install i18n-auto-react -D
+pnpm install i18n-auto-react
  ```
 
 ## 使用
@@ -95,3 +95,6 @@ export default function App() {
   )
 }
 ```
+
+### 其他未完成项
+* 运行时代码需要分包
