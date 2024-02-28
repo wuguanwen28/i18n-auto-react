@@ -180,6 +180,7 @@ export default function i18nPlugin(content: string, options: _I18nConfigs) {
     let codeRes = generator(
       ast,
       {
+        retainLines: true,
         jsescOption: { minimal: true },
         decoratorsBeforeExport: true
       },
