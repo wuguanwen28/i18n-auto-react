@@ -30,7 +30,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        loader: require('i18n-auto-translate/webpack'),
+        loader: 'i18n-auto-react/webpack',
         options: require('../i18n.config.js') // 路径以实际情况为准
       },
       // ...other loader
@@ -41,7 +41,7 @@ module.exports = {
 #### vite 项目
 ```js
 // vite.config.js
-import { i18nAutoPlugin } from 'i18n-auto-translate/vite'
+import { i18nAutoPlugin } from 'i18n-auto-react/vite'
 
 export default defineConfig({
   plugins: [
@@ -52,23 +52,24 @@ export default defineConfig({
 ```
 #### 效果展示
 * 插件的作用是把文件中的中文自动替换为`翻译函数`调用
-* 带有注释的，或者本来就有翻译函数包裹的会忽略翻译
+* 带有注释的 (`aa, bb`)，或者本来就有翻译函数包裹 (`cc`) 的会忽略翻译
 
 转换前
 ```js
 import React from 'react'
+import { i18n as _i18n } from 'i18n-auto-react'
 
 let world = '世界'
 // i18n-disable-next
 let aa = '我是被忽略翻译的中文'
 let bb = '我也是被忽略翻译的中文' // i18n-disable
-// let cc = _t('我也也是被忽略翻译的中文')
+let cc = _i18n('我也也是被忽略翻译的中文')
 
 export default function App() {
   return (
     <div>
       <h3 title="花飘万家雪">你好{world}</h3>
-      <h3>{aa + bb}</h3>
+      <h3>{aa + bb + cc}</h3>
     </div>
   )
 }
@@ -77,12 +78,14 @@ export default function App() {
 转换后
 ```js
 import React from 'react';
-import { i18n as _i18n } from "i18n-auto-react"; // 自动引入
+// 如当前页面有需要翻译的中文时，会自动引入
+import { i18n as _i18n } from "i18n-auto-react";
 
 let world = _i18n("c086b3008aca0efa8f2ded065d6afb50");
 // i18n-disable-next
 let aa = '我是被忽略翻译的中文';
 let bb = '我也是被忽略翻译的中文'; // i18n-disable
+let cc = _i18n('我也也是被忽略翻译的中文')
 
 export default function App() {
   return (
@@ -90,11 +93,34 @@ export default function App() {
       <h3 title={_i18n("29fd4016d2b8d06be750109579b7301e")}>
         {_i18n("7eca689f0d3389d9dea66ae112e5cfd7")}{world}
       </h3>
-      <h3>{aa + bb}</h3>
+      <h3>{aa + bb + cc}</h3>
     </div>
   )
 }
 ```
 
-### 其他未完成项
+### 3. 切换语言
+```ts
+import React from 'react'
+import { changeLanguage, currentLanguage } from 'i18n-auto-react'
+
+export default function App() {
+  return (
+    <div>
+      <button
+        onClick={() => {
+          // 获取当前语言
+          let currLng = currentLanguage()
+          // 切换语言
+          changeLanguage(currLng == 'zh' ? 'en' : 'zh')
+        }}
+      >
+        切换语言
+      </button>
+    </div>
+  )
+}
+```
+
+### 4. 其他未完成项
 * 运行时代码需要分包
