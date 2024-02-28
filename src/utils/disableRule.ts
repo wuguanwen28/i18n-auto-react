@@ -22,10 +22,13 @@ export class DisableRule {
 
   test(sourceLocation: t.SourceLocation | undefined | null) {
     if (!sourceLocation) return false
-    let line = sourceLocation.start.line
+    let startLine = sourceLocation.start.line
+    let endLine = sourceLocation.end.line
     let res = false
-    this.nextLine.forEach((item) => item + 1 == line && (res = true))
-    if (this.thisLine.includes(line)) res = true
+    this.nextLine.forEach((item) => item + 1 == startLine && (res = true))
+    this.thisLine.forEach((item) => {
+      if (item >= startLine && item <= endLine) res = true
+    })
     return res
   }
 }
