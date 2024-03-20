@@ -89,10 +89,10 @@ function changeLanguage(locale: LngType) {
 }
 /**
  * 返回当前语言
- * @returns {string}
+ * @returns {LngType}
  */
-function currentLanguage() {
-  return localStorage.getItem(localStorageKey) || defaultLocale
+function currentLanguage(): LngType {
+  return (localStorage.getItem(localStorageKey) || defaultLocale) as LngType
 }
 
 export {
@@ -101,5 +101,5 @@ export {
   currentLanguage,
   extendLocale,
   removeLocaleData,
-  localStorageKey,
+  localStorageKey
 }
