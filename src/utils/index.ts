@@ -60,29 +60,10 @@ export const createLanguageFile = async (
   fs.writeFileSync(filePath, code, { encoding: 'utf-8' })
 }
 
-export function prettierJs(code: string, config = {}) {
-  const defaultConfig = {
-    parser: 'babel-ts',
-    printWidth: 80,
-    tabWidth: 2,
-    useTabs: false,
-    singleQuote: true,
-    semi: false,
-    trailingComma: 'none',
-    bracketSpacing: true,
-    quoteProps: 'consistent',
-    arrowParens: 'avoid',
-    jsxBracketSameLine: false,
-    overrides: [
-      {
-        files: ['*.js'],
-        options: {
-          spaceBeforeFunctionParen: true
-        }
-      }
-    ]
-  }
-  return prettier.format(code, Object.assign(defaultConfig, config) as any)
+export async function prettierJs(code: string) {
+  const filePath = await prettier.resolveConfigFile()
+  const prettierConfig = (await prettier.resolveConfig(filePath!)) || {}
+  return prettier.format(code, { parser: 'babel-ts', ...prettierConfig })
 }
 
 // 获取需要翻译的列表
@@ -161,7 +142,11 @@ export function readLanguages(
 ) {
   const { output } = config
   const { dir: outputPath, ext = 'js' } = output
-  let curFilePath = path.resolve(config.__rootPath, outputPath, `${name}.${ext}`)
+  let curFilePath = path.resolve(
+    config.__rootPath,
+    outputPath,
+    `${name}.${ext}`
+  )
   if (!fs.existsSync(curFilePath) && isExit) {
     logger.error(`${curFilePath} 文件不存在!`)
     // process.exit(0)
