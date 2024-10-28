@@ -22,10 +22,10 @@ const config = {
 
   warning: true,
 
-  // 私人测试翻译账户，请申请自己的百度翻译服务
+  // 请申请自己的百度翻译服务
   server: {
-    appId: '20240205001959492',   
-    key: 'ojHf7fp2U8VwcRXWg2UP',
+    appId: '',   
+    key: '',
   }
 }
 

@@ -1,9 +1,7 @@
 ## i18n-auto-react
   * 基于 `百度翻译API服务` 的自动翻译工具
   * 只需要书写中文，即可自动翻译成其他语言
-  * 使用前请去
-  <a href="https://api.fanyi.baidu.com/" target="_blank">百度翻译开放平台</a>
-  申请 <a href="https://api.fanyi.baidu.com/doc/21" target="_blank">通用文本翻译服务</a>
+  
 
 ## 安装
  ```sh
@@ -15,14 +13,18 @@ pnpm install i18n-auto-react
  ```
 
 ## 使用
-### 1. 生成语言包
-1. 执行`npx i18n init` 初始化配置 `i18n.config.js`
-2. 申请百度翻译API服务后，在 `i18n.config.js` 配置appId和密钥
-3. 执行 `npm run i18n:translate` 扫描文件中的中文并翻译成语言包
-4. 执行 `npm run i18n:genExport` 生成语言包导出文件
+
+### 1. 前提准备
+1. 使用前请去百度翻译开放平台申请 <a href="https://api.fanyi.baidu.com/doc/21" target="_blank">通用文本翻译服务</a>
+2. 执行 `npx i18n init` 初始化配置 `i18n.config.js`
+3. 配置 `server.appid` 与 `server.key` (百度翻译服务的密钥)
+
+### 2. 生成语言包
+1. 执行 `npx i18n translate` 扫描文件中的中文并翻译成语言包
+2. 执行 `npx i18n genExport` 生成语言包导出文件
 
 
-### 2. 添加插件
+### 3. 添加插件
 #### webpack 项目
 ```js
 module.exports = {
@@ -99,7 +101,7 @@ export default function App() {
 }
 ```
 
-### 3. 切换语言
+### 4. 切换语言
 ```ts
 import React from 'react'
 import { changeLanguage, currentLanguage } from 'i18n-auto-react'
@@ -121,6 +123,3 @@ export default function App() {
   )
 }
 ```
-
-### 4. 其他未完成项
-* 运行时代码需要分包

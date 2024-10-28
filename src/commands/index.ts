@@ -15,7 +15,13 @@ export class I18nCommand {
       genExport: new GenExport(config)
     }
     let command = commandMap[this.command]
-    if (!command) return logger.error(`${this.command}命令不存在`)
+    if (!command) {
+      logger.error(`${this.command} 命令不存在`)
+      logger.info('npx i18n init: 初始化配置文件')
+      logger.info('npx i18n translate: 生成语言包')
+      logger.info('npx i18n genExport: 生成导出文件')
+      return
+    }
     command.run()
   }
 }
