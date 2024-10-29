@@ -1,16 +1,24 @@
 //@ts-nocheck
+import { getConfiguration } from '../utils'
 import i18n from './core'
 
-export default function (source) {
-  var resourcePath = this.resourcePath
-  const options = this.getOptions() || {}
-  var res = source
+let options = null
+
+export default function (source, map, meta) {
+  let resourcePath = this.resourcePath
+
   if (!/node_modules/.test(resourcePath)) {
-    res = i18n(source, {
+    if (!options) options = getConfiguration() || {}
+    let res = i18n(source, {
       ...options,
       filePath: resourcePath,
       emitWarning: this.emitWarning
     })
+
+    if (res && res.code) {
+      this.callback(null, res.code, map || res.map, meta)
+      return
+    }
   }
-  return res
+  this.callback(null, source, map, meta)
 }

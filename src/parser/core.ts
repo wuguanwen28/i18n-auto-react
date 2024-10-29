@@ -29,9 +29,9 @@ export default function i18nPlugin(content: string, options: _I18nConfigs) {
     let includes = ignore().add(options.include)
     let included = includes.ignores(relativePath)
     let ig = ignore().add(options.exclude || [])
-    if (ig.ignores(relativePath) && !included) return content
+    if (ig.ignores(relativePath) && !included) return
   } catch (error) {
-    return content
+    return
   }
 
   const {
@@ -48,12 +48,12 @@ export default function i18nPlugin(content: string, options: _I18nConfigs) {
   })
   if (ast.errors.length > 0) {
     console.warn(ast.errors)
-    return content
+    return
   }
 
   // 注释禁用
   let disableRule = new DisableRule(ast.comments || [])
-  if (disableRule.entireFileDisabled) return content
+  if (disableRule.entireFileDisabled) return
 
   if (!baseLocale) baseLocale = readLanguages('zh', options, true)
   let needI18n = false
@@ -182,13 +182,17 @@ export default function i18nPlugin(content: string, options: _I18nConfigs) {
       {
         retainLines: true,
         jsescOption: { minimal: true },
-        decoratorsBeforeExport: true
+        decoratorsBeforeExport: true,
+        sourceMaps: true,
+        sourceFileName: options.filePath
       },
       content
     )
-    return codeRes.code
+    return {
+      code: codeRes.code,
+      map: codeRes.map
+    }
   }
-  return content
 }
 
 function noLocale(value: string, id: string, relativePath: string, loc: any) {

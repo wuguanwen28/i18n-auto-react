@@ -8,19 +8,19 @@ export function i18nAutoPlugin(): PluginOptions {
     name: 'vite-plugin-i18n-parser',
     enforce: 'pre',
     transform: function (code: string, file: string) {
-      let res = code
       if (!/node_modules/.test(file) && /.(js|ts|tsx|jsx)$/.test(file)) {
-        res = i18n(code, {
+        let res = i18n(code, {
           ...(config || {}),
           filePath: file,
           // @ts-ignore
           emitWarning: this.warn.bind(this),
           isVite: true
         })
+        if (res) return res
       }
 
       return {
-        code: res,
+        code,
         map: null
       }
     }

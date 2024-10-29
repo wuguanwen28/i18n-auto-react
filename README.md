@@ -31,9 +31,9 @@ module.exports = {
   module: {
     rules: [
       {
+        enforce: "pre",
         test: /\.(js|jsx|ts|tsx)$/,
         loader: 'i18n-auto-react/webpack',
-        options: require('../i18n.config.js') // 路径以实际情况为准
       },
       // ...other loader
     ]
