@@ -1,6 +1,6 @@
 {
   "name": "i18n-auto-react",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "基于百度翻译API服务的自动翻译插件",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
