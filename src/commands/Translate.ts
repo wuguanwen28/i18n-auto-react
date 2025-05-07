@@ -14,6 +14,7 @@ import {
   readLanguages,
   scanFile,
   sleep,
+  tplRegexp,
   zhExt
 } from '../utils'
 import axios from 'axios'
@@ -115,7 +116,7 @@ export class Translate {
             let value = path
               .toString()
               .replace(/^`|`$/g, '')
-              .replace(/\$\{([\s\S]+?)\}/g, () => `{{@${++i}}}`)
+              .replace(tplRegexp, () => `{{@${++i}}}`)
             const id = md5Hash(value)
             _this.validateKey(value, id, file)
           }
@@ -246,6 +247,7 @@ export class Translate {
     const from = 'zh'
     const to = targetLanguage || 'en'
     const md5 = crypto.createHash('md5')
+    // @ts-ignore
     md5.update(Buffer.from(appId + word + salt + key))
     const sign = md5.digest('hex')
     const res = await axios({

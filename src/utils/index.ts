@@ -13,6 +13,8 @@ export * from './tpl'
 import _traverse from '@babel/traverse'
 const traverse = getDefault(_traverse)
 
+export const tplRegexp = /(?<!\\)\$\{([\s\S]+?)\}/g
+
 export function getDefault(data) {
   return typeof data === 'function' ? data : data.default
 }

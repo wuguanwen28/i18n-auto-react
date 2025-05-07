@@ -4,6 +4,7 @@ import {
   isCallExpression,
   md5Hash,
   readLanguages,
+  tplRegexp,
   zhExt
 } from '../utils'
 import path from 'path'
@@ -127,7 +128,7 @@ export default function i18nPlugin(content: string, options: _I18nConfigs) {
           let value = path
             .toString()
             .replace(/^`|`$/g, '')
-            .replace(/\$\{([\s\S]+?)\}/g, () => `{{@${++i}}}`)
+            .replace(tplRegexp, () => `{{@${++i}}}`)
           let id = md5Hash(value)
           if (noLocale(value, id, relativePath, path.node.loc)) return
           path.replaceWith(
